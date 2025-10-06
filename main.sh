@@ -32,11 +32,17 @@ chmod ugo+r "$NameDateFile"
 
 # archiving files in SERVER_DATE
 tar -cf ""$ServerName"_"$DateFormate".tar" "$ServerName"* 
-mkdir archives
-mv ""$ServerName"_"$DateFormate".tar" archives
+if [ ! -d "archives" ]; then
+	mkdir archives
+fi
+
+if [ ! -f "archives/"$ServerName"_"$DateFormate".tar" ]; then
+	mv ""$ServerName"_"$DateFormate".tar" archives
+fi
 
 # delete all files
 rm ""$ServerName"_"$DateFormate""*
+rm "list.out"*
 
 # checking archives
-tar --test-label -f archives/""$ServerName"_"$DateFormate".tar" && echo "Backup is good!"
+tar -tf archives/""$ServerName"_"$DateFormate".tar" && echo "Backup is good!" || echo "Backup is corrupted!"
